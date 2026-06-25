@@ -1,13 +1,13 @@
 # Project Idea
-Project Name: SmartExam AI - An Intelligent Assessment Ecosystem
-Description: SmartExam AI is a comprehensive, AI-driven educational ecosystem designed to bridge the gap between structured learning and automated assessment. It empowers students to undertake specialized courses while providing a sophisticated testing environment where progress is monitored through intelligent data analytics. By leveraging Generative AI to curate unique examination papers and evaluate subjective responses, the platform ensures a high-integrity, scalable, and personalized academic journey for every learner.
+**Project Name:** SmartExam AI - An Intelligent Assessment Ecosystem
+**Description:** SmartExam AI is a comprehensive, AI-driven educational ecosystem designed to bridge the gap between structured learning and automated assessment. It empowers students to undertake specialized courses while providing a sophisticated testing environment where progress is monitored through intelligent data analytics. By leveraging Generative AI to curate unique examination papers and evaluate subjective responses, the platform ensures a high-integrity, scalable, and personalized academic journey for every learner.
 
-Stakeholders
+**Stakeholders**
 1. Teacher: Acts as the primary architect of the learning experience. Teachers define course structures and set the pedagogical pipeline. The platform serves as a force multiplier, eliminating the burden of manual administrative tasks—such as drafting unique exam questions, grading complex scripts, and updating performance records—allowing educators to focus on high-level instructional design.
 
 2. Student: The primary beneficiary of the flexible learning environment. Students can access high-quality instructional material and participate in rigorous examinations from the comfort of their homes. This eliminates geographical constraints and transit time while providing an immediate, data-backed dashboard to visualize their academic growth and identify specific areas for improvement.
 
-Features
+**Features**
 1. Course Creation: Teachers are equipped with an intuitive dashboard to design modular course outlines and multi-stage pipelines. This includes defining the sequence of learning materials and pre-setting examination patterns (difficulty ratios, topic weighting, and question types) tailored to the curriculum.
 
 2. AI Question Generator: Utilizing advanced Natural Language Processing (NLP), the system parses course notes and pipeline data to generate context-aware, original examination questions. This ensures that every test is unique, preventing question leakage and maintaining academic rigor.
@@ -20,7 +20,7 @@ Features
 
 6. Progress Tracker: A dynamic analytics engine that synthesizes exam data into visual growth charts. It doesn't just show grades; it performs a gap analysis to provide students with actionable, data-driven suggestions to refine their study habits.
 
-Future Work
+**Future Work**
 1. Advance Anti-Cheat Logic:
     * AI Proctoring: Integration of a vision-based monitoring system using the student’s webcam and microphone to detect suspicious behavior, unauthorized persons, or the use of secondary devices through real-time gaze tracking and object detection.
 
