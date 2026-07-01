@@ -172,6 +172,11 @@ __marimo__/
 .DS_Store
 Thumbs.db
 
+# =========================
+# Node JS
+# =========================
+node_modules/
+
 # custom
 docs/Product Requirement Document (PRD)/*
 docs/Project Idea & Business Analysis Phase/*
