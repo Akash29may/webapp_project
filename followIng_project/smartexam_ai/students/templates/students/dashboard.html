@@ -1,0 +1,274 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard | SmartExam AI{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(78, 84, 200, 0.2);
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-header::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        border: none;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-left: 5px solid transparent;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card.courses { border-left-color: #0d6efd; }
+    .stat-card.exams { border-left-color: #198754; }
+    .stat-card.rank { border-left-color: #ffc107; }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        opacity: 0.8;
+    }
+
+    .courses .stat-icon { color: #0d6efd; }
+    .exams .stat-icon { color: #198754; }
+    .rank .stat-icon { color: #ffc107; }
+
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #2b2b2b;
+        margin-bottom: 0;
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+    }
+
+    .section-title {
+        font-weight: 700;
+        color: #2b2b2b;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #0d6efd;
+        border-radius: 3px;
+    }
+
+    .action-card {
+        border-radius: 12px;
+        border: 1px dashed #dee2e6;
+        background: #f8f9fa;
+        text-align: center;
+        padding: 30px 20px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #495057;
+        display: block;
+    }
+
+    .action-card:hover {
+        background: white;
+        border-color: #0d6efd;
+        color: #0d6efd;
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+        transform: scale(1.02);
+    }
+
+    .action-card i {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        display: block;
+    }
+    
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+        padding: 15px 20px;
+        transition: background-color 0.2s;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8fbff;
+    }
+    
+    .course-badge {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 12px;
+    }
+</style>
+
+<div class="dashboard-header d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div class="header-content">
+        <h2 class="fw-bold mb-1">Welcome back, {{ user.first_name|default:user.username }} {{ user.last_name|default:'' }}!</h2>
+        <p class="mb-0 opacity-75">Ready for your next challenge? Here's an overview of your academic progress.</p>
+    </div>
+    <div class="header-content">
+        <a href="{% url 'students:browse_courses' %}" class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow-sm">
+            <i class="fas fa-search me-2"></i>Find Courses
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="stat-card courses">
+            <i class="fas fa-book-open stat-icon"></i>
+            <h3 class="stat-value">{{ active_courses_count }}</h3>
+            <span class="stat-label">Active Courses</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card exams">
+            <i class="fas fa-clipboard-list stat-icon"></i>
+            <h3 class="stat-value">{{ total_exams_taken }}</h3>
+            <span class="stat-label">Total Exams Taken</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card rank">
+            <i class="fas fa-chart-line stat-icon"></i>
+            <h3 class="stat-value">{{ avg_score }}%</h3>
+            <span class="stat-label">Avg Score</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <!-- Quick Actions -->
+    <div class="col-lg-3">
+        <h4 class="section-title">Quick Actions</h4>
+        <div class="d-grid gap-3">
+            <a href="{% url 'students:browse_courses' %}" class="action-card">
+                <i class="fas fa-search-plus text-primary"></i>
+                <span class="fw-bold">Browse Courses</span>
+            </a>
+            <a href="{% url 'students:exams_list' %}" class="action-card">
+                <i class="fas fa-file-alt text-success"></i>
+                <span class="fw-bold">Upcoming Exams</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Your Courses -->
+    <div class="col-lg-5">
+        <div class="d-flex justify-content-between align-items-baseline mb-3">
+            <h4 class="section-title mb-0">Your Courses</h4>
+            <a href="{% url 'students:browse_courses' %}" class="text-decoration-none small fw-bold">View All <i class="fas fa-angle-right"></i></a>
+        </div>
+        
+        {% if courses_data %}
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="list-group list-group-flush">
+                {% for course in courses_data %}
+                <a href="{% url 'students:course_detail' course.id %}" class="list-group-item list-group-item-action py-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-dark">{{ course.title }}</h6>
+                        <small class="text-muted"><i class="fas fa-chalkboard-teacher me-1"></i> Prof. {{ course.teacher }}</small>
+                    </div>
+                    <span class="badge bg-primary bg-opacity-10 text-primary course-badge rounded-pill px-3">
+                        <i class="fas fa-chart-line me-1"></i> Rank {{ course.rank }}
+                    </span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-book-reader"></i>
+            <h5>No Courses Yet</h5>
+            <p class="text-muted small">Start learning by exploring and enrolling in your first course.</p>
+            <a href="{% url 'students:browse_courses' %}" class="btn btn-outline-primary btn-sm mt-2 rounded-pill px-4">Browse Courses</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Requires Attention -->
+    <div class="col-lg-4">
+        <h4 class="section-title">Requires Attention</h4>
+        
+        {% if pending_exams or recent_evaluations %}
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="list-group list-group-flush">
+                {% for exam in pending_exams %}
+                <!-- Pending Exam Action -->
+                <div class="list-group-item py-3">
+                    <div class="d-flex w-100 justify-content-between mb-1">
+                        <h6 class="mb-0 fw-bold text-dark">{{ exam.title }}</h6>
+                        <small class="text-danger fw-bold">Action Required</small>
+                    </div>
+                    <p class="mb-1 small text-muted text-truncate">{{ exam.course.title }}</p>
+                    <a href="#" class="btn btn-sm btn-outline-danger rounded-pill mt-2 py-0 px-3" style="font-size: 0.75rem;">Take Exam</a>
+                </div>
+                {% endfor %}
+
+                {% for script in recent_evaluations %}
+                <!-- Review Feedback Action -->
+                <div class="list-group-item py-3">
+                    <div class="d-flex w-100 justify-content-between mb-1">
+                        <h6 class="mb-0 fw-bold text-dark">Review Feedback</h6>
+                        <small class="text-success fw-bold">Completed</small>
+                    </div>
+                    <p class="mb-1 small text-muted text-truncate">{{ script.exam.title }} - {{ script.marks }}/{{ script.exam.marks }}</p>
+                    <a href="#" class="btn btn-sm btn-outline-primary rounded-pill mt-2 py-0 px-3" style="font-size: 0.75rem;">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-check-circle"></i>
+            <h5>All Caught Up!</h5>
+            <p class="text-muted small">You don't have any pending exams or recent feedback.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

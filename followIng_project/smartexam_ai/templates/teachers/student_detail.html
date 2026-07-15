@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard | SmartExam AI{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4">
+    <div class="bg-primary text-white p-5 text-center position-relative" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="position-absolute top-0 start-0 p-3">
+            <a href="javascript:history.back()" class="btn btn-sm btn-light rounded-pill"><i class="fas fa-arrow-left me-1"></i>Back</a>
+        </div>
+        <div class="bg-white text-primary rounded-circle d-inline-flex border border-5 border-white align-items-center justify-content-center mb-3 shadow" style="width: 100px; height: 100px; font-size: 2.5rem; font-weight: bold;">
+            {{ student.user.first_name|first|default:student.user.username|first|upper }}
+        </div>
+        <h2 class="fw-bold mb-0">{{ student.user.get_full_name|default:student.user.username }}</h2>
+        <p class="opacity-75 mb-0">{{ student.user.email }} | {{ student.institution }}</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Active Courses -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-white fw-bold pt-4 pb-0 border-0">
+                <i class="fas fa-book text-primary me-2"></i>Enrolled In Your Courses
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for rc in registered_courses %}
+                    <li class="list-group-item px-0 d-flex justify-content-between align-items-center border-bottom">
+                        <div>
+                            <h6 class="fw-bold mb-0">{{ rc.course.title }}</h6>
+                            <small class="text-muted border-end pe-2">{{ rc.course.course_code }}</small>
+                            <small class="text-muted ps-1">Joined {{ rc.enrolled_at|date:"M Y" }}</small>
+                        </div>
+                        <a href="{% url 'teachers:course_detail' rc.course.id %}" class="btn btn-sm btn-light rounded-circle"><i class="fas fa-chevron-right"></i></a>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted text-center py-4 border-0">No active course enrollments.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Submission History -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 rounded-3 h-100">
+            <div class="card-header bg-white fw-bold pt-4 pb-0 border-0">
+                <i class="fas fa-history text-success me-2"></i>Performance History
+            </div>
+            <div class="card-body">
+                {% for sub in submissions %}
+                <div class="d-flex p-3 bg-light rounded mb-3 border-start border-4 border-success">
+                    <div class="flex-grow-1">
+                        <h6 class="fw-bold mb-1">{{ sub.exam.title }}</h6>
+                        <small class="text-muted">{{ sub.exam.course.course_code }} &bull; {{ sub.submitted_at|date:"M d, Y" }}</small>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold text-success">{{ sub.marks_obtained|default:"0" }} / {{ sub.exam.marks }}</div>
+                        <a href="#" class="small text-decoration-none">Review Script</a>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-4">
+                    <i class="fas fa-file-invoice fa-2x opacity-25 mb-2"></i>
+                    <p class="text-muted mb-0">No exam submissions found for this student yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account | SmartExam AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fbff 0%, #e8f0ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            padding: 40px 0;
+        }
+
+        .login-card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            background: #f8f9fa;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            padding: 15px;
+            font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: #fff;
+            color: #0d6efd;
+            border-bottom: 3px solid #0d6efd;
+        }
+
+        .form-control {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-login {
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .errorlist {
+            color: #dc3545;
+            list-style-type: none;
+            padding-left: 0;
+            font-size: 0.875em;
+            margin-bottom: 0.5rem;
+        }
+        
+        form p {
+            margin-bottom: 1rem;
+        }
+        
+        form label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="text-center mb-4">
+                    <a href="/" class="brand-logo"><i class="fas fa-brain me-2"></i>SmartExam AI</a>
+                </div>
+
+                <div class="card login-card">
+                    <ul class="nav nav-tabs d-flex" id="loginTabs" role="tablist">
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link active" id="student-tab" data-bs-toggle="tab"
+                                data-bs-target="#student" type="button" role="tab">
+                                <i class="fas fa-user-graduate me-2"></i>Student Registration
+                            </button>
+                        </li>
+                        <li class="nav-item flex-fill" role="presentation">
+                            <button class="nav-link" id="teacher-tab" data-bs-toggle="tab" data-bs-target="#teacher"
+                                type="button" role="tab">
+                                <i class="fas fa-chalkboard-teacher me-2"></i>Teacher Registration
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="card-body p-4 p-lg-5">
+                        {% if messages %}
+                        <div class="mb-3">
+                            {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                                role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="tab-content" id="loginTabsContent">
+
+                            <!-- Student Registration -->
+                            <div class="tab-pane fade show active" id="student" role="tabpanel">
+                                <h4 class="mb-4 fw-bold text-center">Join as Student</h4>
+                                <form action="{% url 'register' %}" method="POST" id="student-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_type" value="student">
+                                    
+                                    {{ student_form.as_p }}
+
+                                    <button type="submit" class="btn btn-primary w-100 btn-login mt-3">Create Student Account</button>
+                                </form>
+                            </div>
+
+                            <!-- Teacher Registration -->
+                            <div class="tab-pane fade" id="teacher" role="tabpanel">
+                                <h4 class="mb-4 fw-bold text-center">Join as Teacher</h4>
+                                <form action="{% url 'register' %}" method="POST" id="teacher-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_type" value="teacher">
+                                    
+                                    {{ teacher_form.as_p }}
+
+                                    <button type="submit" class="btn btn-dark w-100 btn-login mt-3">Create Teacher Account</button>
+                                </form>
+                            </div>
+
+                        </div>
+                        <div class="text-center mt-4">
+                            <p class="small text-muted">Already have an account? <a href="{% url 'login' %}"
+                                    class="text-decoration-none">Sign In</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'landpage' %}" class="btn btn-link btn-sm text-secondary text-decoration-none">
+                        <i class="fas fa-arrow-left me-1"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Style Django forms with Bootstrap
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputs = document.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"])');
+            inputs.forEach(function(input) {
+                input.classList.add('form-control');
+            });
+            
+            var helpTexts = document.querySelectorAll('.helptext');
+            helpTexts.forEach(function(helpText) {
+                helpText.classList.add('form-text', 'text-muted', 'd-block', 'small');
+            });
+
+            // Keep correct tab active if there's an error
+            {% if request.method == "POST" %}
+                {% if request.POST.user_type == "teacher" %}
+                    var teacherTab = new bootstrap.Tab(document.querySelector('#teacher-tab'));
+                    teacherTab.show();
+                {% else %}
+                    var studentTab = new bootstrap.Tab(document.querySelector('#student-tab'));
+                    studentTab.show();
+                {% endif %}
+            {% endif %}
+        });
+    </script>
+</body>
+
+</html>

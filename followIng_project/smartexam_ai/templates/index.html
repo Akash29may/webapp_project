@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartExam AI | Intelligent Assessment Ecosystem</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #2d3436;
+            scroll-behavior: smooth;
+        }
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eee;
+        }
+        .hero-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fbff 0%, #e8f0ff 100%);
+        }
+        .btn-primary {
+            background-color: #0d6efd;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            background: #fff;
+            height: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: #eef4ff;
+            color: #0d6efd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .stakeholder-card {
+            background: #2d3436;
+            color: #fff;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        .future-work-badge {
+            background: #6c5ce7;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        footer {
+            background: #f8f9fa;
+            padding: 50px 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="#">
+                <i class="fas fa-brain me-2"></i>SmartExam AI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#stakeholders">Stakeholders</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#future">Future Roadmap</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary" href="{% url "login" %}">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">Bridging Learning & <span class="text-primary">Automated Assessment</span></h1>
+                    <p class="lead mb-5 text-muted">A comprehensive, AI-driven ecosystem designed for high-integrity examination and personalized academic growth.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#features" class="btn btn-primary">Explore Features</a>
+                        <a href="{% url "login" %}" class="btn btn-light shadow-sm">Sign In</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+                   <i class="fas fa-laptop-code fa-10x text-primary opacity-25"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="stakeholders" class="py-5">
+        <div class="container py-5">
+            <h2 class="text-center section-title">Who is it for?</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="stakeholder-card h-100">
+                        <i class="fas fa-chalkboard-teacher fa-3x mb-4 text-info"></i>
+                        <h3>For Teachers</h3>
+                        <p class="opacity-75">The primary architect. Automate administrative tasks like drafting unique questions and grading scripts. Focus on high-level instructional design while our AI handles the rest.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="stakeholder-card h-100" style="background: #0d6efd;">
+                        <i class="fas fa-user-graduate fa-3x mb-4 text-white"></i>
+                        <h3>For Students</h3>
+                        <p class="opacity-75">Access specialized courses from anywhere. Benefit from immediate, data-backed dashboards and a fair, high-integrity testing environment tailored to your growth.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-5 bg-light">
+        <div class="container py-5">
+            <h2 class="text-center section-title">Core Ecosystem Features</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-layer-group"></i></div>
+                        <h4>Course Creation</h4>
+                        <p class="text-muted small">Design modular outlines and multi-stage pipelines with custom difficulty ratios and topic weightings.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-magic"></i></div>
+                        <h4>AI Question Gen</h4>
+                        <p class="text-muted small">Utilizes NLP to parse course notes and generate original, context-aware questions to prevent leakage.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-stopwatch"></i></div>
+                        <h4>Timer-Based Exam</h4>
+                        <p class="text-muted small">Synchronized server-side timers ensure strict temporal boundaries and automated submission.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-user-shield"></i></div>
+                        <h4>Anti-Cheat Logic</h4>
+                        <p class="text-muted small">Monitors browser behavior, detects tab switching (blur), and disables clipboard functionalities.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-microchip"></i></div>
+                        <h4>AI Subjective Eval</h4>
+                        <p class="text-muted small">LLM-driven analysis of long-form answers for semantic accuracy and conceptual depth.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card p-4">
+                        <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+                        <h4>Progress Tracker</h4>
+                        <p class="text-muted small">Dynamic analytics engine offering gap analysis and data-driven study suggestions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="future" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <span class="future-work-badge">Roadmap</span>
+                <h2 class="mt-3 section-title">The Future of SmartExam AI</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 border-start border-4 border-primary">
+                        <h5>AI Proctoring</h5>
+                        <p class="small text-muted">Vision-based gaze tracking and object detection via webcam.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 border-start border-4 border-primary">
+                        <h5>Adaptive Testing</h5>
+                        <p class="small text-muted">Intelligent systems that recalibrate difficulty in real-time.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 border-start border-4 border-primary">
+                        <h5>SEB Integration</h5>
+                        <p class="small text-muted">Operating system lockdown via Safe Exam Browser API.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="p-3 border-start border-4 border-primary">
+                        <h5>Voice Analysis</h5>
+                        <p class="small text-muted">Audio intelligence layer to monitor environmental honesty.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container text-center">
+            <p class="fw-bold text-primary mb-3"><i class="fas fa-brain me-2"></i>SmartExam AI</p>
+            <p class="text-muted small">© 2024 SmartExam AI - Building the future of Academic Integrity.</p>
+            <div class="mt-3">
+                <a href="#" class="text-muted mx-2"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-muted mx-2"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

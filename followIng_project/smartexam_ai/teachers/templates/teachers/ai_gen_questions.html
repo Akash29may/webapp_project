@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 p-4">
+            <h3 class="fw-bold mb-3"><i class="fas fa-magic text-primary me-2"></i>AI Question Generator</h3>
+            <p class="text-muted">Upload course materials or paste notes to generate unique exam papers.</p>
+            <hr>
+            
+            <form action="{% url 'teachers:ai_gen_qs' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Select Course Context</label>
+                    <select class="form-select" name="course_id">
+                        <option>Quantum Computing 101</option>
+                        <option>Advanced Neural Networks</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Question Strategy</label>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" placeholder="MCQs count" name="mcq_count">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" placeholder="Subjective count" name="sub_count">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" name="difficulty">
+                                <option>Easy</option>
+                                <option selected>Balanced</option>
+                                <option>Hard</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Upload Source Material (PDF/Txt)</label>
+                    <input type="file" class="form-control" name="source_file">
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary py-2 fw-bold">
+                        Generate Examination Paper
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

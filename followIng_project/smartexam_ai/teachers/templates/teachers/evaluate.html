@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3 class="fw-bold mb-4">Pending Subjective Evaluations</h3>
+
+<div class="table-responsive bg-white shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="bg-light">
+            <tr>
+                <th>Student</th>
+                <th>Question</th>
+                <th>AI Suggested Score</th>
+                <th>AI Reasoning</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>John Doe</strong></td>
+                <td class="small">"Explain the impact of AI on job markets..."</td>
+                <td><span class="badge bg-success">8.5 / 10</span></td>
+                <td><p class="small text-muted mb-0">Strong keyword match: 'automation', 'economic shift'. Good conceptual depth.</p></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary">Approve</button>
+                    <button class="btn btn-sm btn-outline-secondary">Edit</button>
+                </td>
+            </tr>
+            </tbody>
+    </table>
+</div>
+{% endblock %}

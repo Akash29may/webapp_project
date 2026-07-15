@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ exam.title }} | Live Assesment Environment</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        /* Anti-Cheat Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            /* Disable selection */
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+        }
+        
+        .exam-header {
+            background-color: #ffffff;
+            border-bottom: 2px solid #e9ecef;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .timer-card {
+            background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(255, 65, 108, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timer-warning {
+            animation: pulse-danger 1s infinite alternate;
+        }
+
+        @keyframes pulse-danger {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            100% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+        }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: #dee2e6;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+        }
+
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        
+        /* Cheat warning overlay */
+        #cheatOverlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(220, 53, 69, 0.95);
+            z-index: 9999;
+            color: white;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;" oncopy="return false;" oncut="return false;" onpaste="return false;">
+
+    <!-- Cheat Overlay -->
+    <div id="cheatOverlay">
+        <i class="fas fa-exclamation-triangle fa-5x mb-4"></i>
+        <h1 class="fw-bold">Warning: Tab Switching Detected</h1>
+        <p class="fs-5">You have left the exam window. This event has been recorded.</p>
+        <button id="dismissWarning" class="btn btn-light btn-lg mt-3 fw-bold rounded-pill px-5 text-danger">Return to Exam</button>
+    </div>
+
+    <!-- Sticky Header -->
+    <div class="exam-header py-3 shadow-sm mb-5">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <h4 class="fw-bold m-0 text-primary">{{ exam.course.course_code }}</h4>
+                <p class="m-0 text-muted small">{{ exam.title }}</p>
+            </div>
+            <div id="timerBadge" class="timer-card fs-4">
+                <i class="fas fa-hourglass-half"></i> <span id="timeRemaining">--:--</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        
+        <div class="alert alert-info border-0 shadow-sm rounded-3 mb-5 d-flex align-items-center">
+            <i class="fas fa-shield-alt fa-2x me-3 text-info"></i>
+            <div>
+                <strong>Secure Assessment Active</strong><br>
+                <span>Please do not switch tabs or exit fullscreen mode. Violations are automatically logged and reported to your instructor.</span>
+            </div>
+        </div>
+
+        <form id="examForm" method="POST" action="{% url 'students:take_exam' exam.id %}">
+            {% csrf_token %}
+            <!-- Hidden inputs for cheat/activity tracking -->
+            <input type="hidden" name="tab_switches" id="tabSwitchesInput" value="0">
+            <input type="hidden" name="fullscreen_broken" id="fullscreenBrokenInput" value="False">
+
+            <!-- Question Script Injection -->
+            {% if mock %}
+                <!-- Mock Data completely fallback -->
+                <div class="question-card p-4">
+                    <h5 class="fw-bold"><span class="text-primary me-2">Q1.</span> Explain the principles of dynamic programming.</h5>
+                    <div class="mt-4">
+                        <textarea class="form-control" name="q_1" rows="5" placeholder="Write your answer here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="question-card p-4">
+                    <h5 class="fw-bold"><span class="text-primary me-2">Q2.</span> Which data structure uses LIFO?</h5>
+                    <div class="mt-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="q_2" id="q2_a" value="Queue">
+                            <label class="form-check-label" for="q2_a">Queue</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="q_2" id="q2_b" value="Stack">
+                            <label class="form-check-label" for="q2_b">Stack</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="q_2" id="q2_c" value="Tree">
+                            <label class="form-check-label" for="q2_c">Tree</label>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {% for q in questions %}
+                <div class="question-card p-4">
+                    <h5 class="fw-bold"><span class="text-primary me-2">Q{{ forloop.counter }}.</span> {{ q.question_text }} <span class="badge bg-light text-muted float-end">{{ q.marks }} Marks</span></h5>
+                    
+                    <div class="mt-4">
+                        {% if q.type == 'mcq' %}
+                            {% for option in q.options %}
+                            <div class="form-check mb-3">
+                                <input class="form-check-input p-2" type="radio" name="q_{{ q.id }}" id="q{{ q.id }}_{{ forloop.counter }}" value="{{ option }}">
+                                <label class="form-check-label ms-2 mt-1" for="q{{ q.id }}_{{ forloop.counter }}">
+                                    {{ option }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <textarea class="form-control bg-light" name="q_{{ q.id }}" rows="6" placeholder="Construct your detailed answer here..."></textarea>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="d-flex justify-content-between align-items-center mt-5 p-4 bg-white shadow-sm border rounded-3 position-sticky bottom-0">
+                <div class="text-muted small">
+                    <i class="fas fa-info-circle me-1"></i> Ensure all your answers are finalized before submitting.
+                </div>
+                <button type="submit" id="btnSubmit" class="btn btn-success btn-lg px-5 rounded-pill fw-bold shadow">
+                    <i class="fas fa-paper-plane me-2"></i> Submit Examination
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Anti-Cheat Engine & Timer State
+        const examDuration = parseInt("{{ exam.duration_minutes }}", 10);
+        let timeRemainingSeconds = examDuration * 60;
+        let tabSwitches = 0;
+        
+        const timerDisplay = document.getElementById('timeRemaining');
+        const timerBadge = document.getElementById('timerBadge');
+        const examForm = document.getElementById('examForm');
+        
+        const overlay = document.getElementById('cheatOverlay');
+        const tabSwitchesInput = document.getElementById('tabSwitchesInput');
+        const fullscreenInput = document.getElementById('fullscreenBrokenInput');
+
+        // 1. Synchronized Countdown Logic
+        function updateTimer() {
+            let m = Math.floor(timeRemainingSeconds / 60);
+            let s = timeRemainingSeconds % 60;
+            timerDisplay.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
+            if (timeRemainingSeconds <= 300) {
+                // 5 minutes remaining warning pulse
+                timerBadge.classList.add('timer-warning');
+            }
+
+            if (timeRemainingSeconds <= 0) {
+                // Time's Up -> Auto Submission
+                clearInterval(timerInterval);
+                timerDisplay.innerText = "00:00";
+                
+                // Block screen and auto submit
+                document.body.innerHTML = '<div style="display:flex; height:100vh; align-items:center; justify-content:center; background:#212529; color:white; flex-direction:column;"><i class="fas fa-clock fa-5x mb-4 text-warning"></i><h1>Time is up!</h1><p>Submitting your answers automatically...</p></div>';
+                
+                setTimeout(() => examForm.submit(), 2000);
+            } else {
+                timeRemainingSeconds--;
+            }
+        }
+        
+        const timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // init immediately
+
+        // 2. Tab Switching Detection (Visibility API)
+        const MAX_TAB_SWITCHES = 3;
+        
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                tabSwitches++;
+                tabSwitchesInput.value = tabSwitches;
+                
+                if (tabSwitches >= MAX_TAB_SWITCHES) {
+                    // Force termination
+                    clearInterval(timerInterval);
+                    document.title = "TERMINATED - CHEATING DETECTED";
+                    document.body.innerHTML = `
+                        <div style="display:flex; height:100vh; align-items:center; justify-content:center; background:#dc3545; color:white; flex-direction:column; text-align:center; padding: 20px;">
+                            <i class="fas fa-ban fa-5x mb-4 text-white"></i>
+                            <h1 class="fw-bold">EXAM TERMINATED</h1>
+                            <p class="fs-5">You have exceeded the maximum allowed number of tab switches (${MAX_TAB_SWITCHES}).<br>Your exam has been automatically submitted and flagged for review.</p>
+                        </div>`;
+                    // Wait slightly then auto-submit the captured answers
+                    setTimeout(() => examForm.submit(), 3000);
+                } else {
+                    // Render warning overlay upon return
+                    overlay.style.display = 'flex';
+                    document.getElementById('dismissWarning').innerText = `Return to Exam (Warning ${tabSwitches} of ${MAX_TAB_SWITCHES})`;
+                    document.title = "⚠️ EXAM WARNING";
+                }
+            }
+        });
+
+        document.getElementById('dismissWarning').addEventListener('click', (e) => {
+            e.preventDefault();
+            overlay.style.display = 'none';
+            document.title = "{{ exam.title }}";
+            // Ask for fullscreen automatically as penalty
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+        });
+
+        // 3. DevTools / Keyboard restrictions
+        document.addEventListener('keydown', (e) => {
+            // Block F12
+            if(e.key === 'F12') { e.preventDefault(); return false; }
+            // Block Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+U
+            if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) { e.preventDefault(); return false; }
+            if(e.ctrlKey && (e.key === 'U' || e.key === 'u')) { e.preventDefault(); return false; }
+        });
+        
+        // 4. Submit confirmation hook
+        document.getElementById('btnSubmit').addEventListener('click', function(e) {
+            e.preventDefault();
+            if(confirm("Are you sure you want to submit? You cannot change your answers after this point.")) {
+                examForm.submit();
+                this.classList.add('disabled');
+                this.innerText = 'Submitting...';
+            }
+        });
+    </script>
+</body>
+</html>

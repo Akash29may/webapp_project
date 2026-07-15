@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Edit {{ exam.title }} | SmartExam AI{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+    <h2 class="fw-bold mb-0">Edit Exam Details</h2>
+    <a href="{% url 'teachers:exam_detail' exam.id %}" class="btn btn-outline-secondary rounded-pill"><i class="fas fa-times me-2"></i>Cancel</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <form method="POST" action="{% url 'teachers:edit_exam' exam.id %}">
+            {% csrf_token %}
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-body p-5">
+                    
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Exam Title *</label>
+                            <input type="text" name="title" class="form-control" value="{{ exam.title }}" required>
+                        </div>
+                        
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea name="description" class="form-control" rows="3">{{ exam.description }}</textarea>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Status *</label>
+                            <select name="status" class="form-select" required>
+                                <option value="pending" {% if exam.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="active" {% if exam.status == 'active' %}selected{% endif %}>Active</option>
+                                <option value="completed" {% if exam.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Exam Type *</label>
+                            <select name="exam_type" class="form-select" required>
+                                <option value="both" {% if exam.exam_type == 'both' %}selected{% endif %}>Both (MCQ + Subj)</option>
+                                <option value="mcq" {% if exam.exam_type == 'mcq' %}selected{% endif %}>MCQ Only</option>
+                                <option value="subjective" {% if exam.exam_type == 'subjective' %}selected{% endif %}>Subjective Only</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Total Marks *</label>
+                            <input type="number" name="marks" class="form-control" value="{{ exam.marks }}" min="1" required>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Date & Time</label>
+                            <input type="datetime-local" name="exam_date" class="form-control" value="{{ exam.exam_date|date:'Y-m-d\TH:i' }}">
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Duration (Minutes) *</label>
+                            <input type="number" name="duration_minutes" class="form-control" value="{{ exam.duration_minutes }}" min="1" required>
+                        </div>
+                        
+                        <div class="col-md-12 border-top pt-4 mt-4">
+                            <h5 class="fw-bold mb-3"><i class="fas fa-scroll text-warning me-2"></i>Rules and Instructions</h5>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Student Rules</label>
+                            <textarea name="rules" class="form-control" rows="5" placeholder="Time limit, closed book, etc.">{{ exam.rules }}</textarea>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-info"><i class="fas fa-robot me-2"></i>AI Evaluation Instructions *</label>
+                            <textarea name="instruct_ai" class="form-control" rows="5" placeholder="Tell the AI how strict to be or what keywords to look for." required>{{ exam.instruct_ai }}</textarea>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="card-footer bg-light border-0 p-4 text-end">
+                    <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow-sm">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
