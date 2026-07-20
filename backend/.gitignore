@@ -1,0 +1,15 @@
+# Python / venv
+.venv/
+__pycache__/
+*.py[cod]
+
+# Django
+db.sqlite3
+staticfiles/
+media/
+
+# Env / secrets — never commit the real .env
+.env
+
+# Tooling
+.pytest_cache/
